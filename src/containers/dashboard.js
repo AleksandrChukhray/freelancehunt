@@ -1,15 +1,33 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import LayoutContentWrapper from '../components/utility/layoutWrapper';
 import LayoutContent from '../components/utility/layoutContent';
+import Widget from '../containers/Widgets';
+import actions from './../redux/dashboard/actions';
+import {connect} from 'react-redux';
 
-export default class extends Component {
-  render() {
-    return (
-      <LayoutContentWrapper style={{ height: '100vh' }}>
-        <LayoutContent>
-          <h1>ISOMORPHIC DASHBOARD HOME</h1>
-        </LayoutContent>
-      </LayoutContentWrapper>
-    );
-  }
+const {
+    getData,
+    getDataSuccessResult,
+    getDataErrorResult
+} = actions;
+
+class DashboardView extends Component {
+    render() {
+        return (
+            <Widget {...this.props} />
+        );
+    }
 }
+
+const mapStateToProps = state => ({
+    Dashboard: state.Dashboard
+});
+
+const Dashboard = connect(
+    mapStateToProps,
+    {getData, getDataErrorResult, getDataSuccessResult}
+)(DashboardView);
+
+export default Dashboard;
+
+
