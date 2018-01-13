@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import {Input} from 'antd';
+import {Input, Row, Col} from 'antd';
+import basicStyle from '../../../config/basicStyle';
 import Form from '../../../components/uielements/form';
 import Checkbox from '../../../components/uielements/checkbox';
 import Button from '../../../components/uielements/button';
@@ -13,20 +14,20 @@ class FormWIthSubmissionButton extends Component {
     };
     handleSubmit = e => {
         e.preventDefault();
+        const updateData = this.props.updateData;
+
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
-                Notification(
-                    'success',
-                    'Received values of form',
-                    JSON.stringify(values)
-                );
+                updateData(values);
             }
         });
     };
+
     handleConfirmBlur = e => {
         const value = e.target.value;
         this.setState({confirmDirty: this.state.confirmDirty || !!value});
     };
+
     checkPassword = (rule, value, callback) => {
         const form = this.props.form;
         if (value && value !== form.getFieldValue('password')) {
@@ -35,6 +36,7 @@ class FormWIthSubmissionButton extends Component {
             callback();
         }
     };
+
     checkConfirm = (rule, value, callback) => {
         const form = this.props.form;
         if (value && this.state.confirmDirty) {
@@ -45,6 +47,15 @@ class FormWIthSubmissionButton extends Component {
 
     render() {
         const {getFieldDecorator} = this.props.form;
+
+        const {
+            port,
+            connectionString,
+            username,
+            password
+        } = this.props.settings;
+
+        const {rowStyle, colStyle} = basicStyle;
 
         const formItemLayout = {
             labelCol: {
@@ -70,79 +81,86 @@ class FormWIthSubmissionButton extends Component {
         };
         return (
             <Form onSubmit={this.handleSubmit}>
-                <FormItem {...formItemLayout} label="connectionString" hasFeedback>
-                    {getFieldDecorator('connectionString', {
-                        rules: [
-                            {
-                                type: 'string',
-                                message: 'The input is not valid!',
-                            },
-                            {
-                                required: true,
-                                message: 'Please input your Connection String!',
-                            },
-                        ],
-                    })(<Input name="connectionString" id="connectionString"/>)}
-                </FormItem>
-                <FormItem {...formItemLayout} label="Port" hasFeedback>
-                    {getFieldDecorator('port', {
-                        rules: [
-                            {
-                                type: 'string',
-                                message: 'The input is not valid!',
-                            },
-                            {
-                                required: true,
-                                message: 'Please input your Port!',
-                            },
-                        ],
-                    })(<Input name="port" id="port"/>)}
-                </FormItem>
-                <FormItem {...formItemLayout} label="Username" hasFeedback>
-                    {getFieldDecorator('username', {
-                        rules: [
-                            {
-                                type: 'string',
-                                message: 'The input is not valid!',
-                            },
-                            {
-                                required: true,
-                                message: 'Please input your Username!',
-                            },
-                        ],
-                    })(<Input name="username" id="username"/>)}
-                </FormItem>
-                <FormItem {...formItemLayout} label="Password" hasFeedback>
-                    {getFieldDecorator('password', {
-                        rules: [
-                            {
-                                required: true,
-                                message: 'Please input your password!',
-                            },
-                            {
-                                validator: this.checkConfirm,
-                            },
-                        ],
-                    })(<Input type="password" name="password" id="password"/>)}
-                </FormItem>
-                <FormItem {...formItemLayout} label="Confirm Password" hasFeedback>
-                    {getFieldDecorator('confirm', {
-                        rules: [
-                            {
-                                required: true,
-                                message: 'Please confirm your password!',
-                            },
-                            {
-                                validator: this.checkPassword,
-                            },
-                        ],
-                    })(<Input type="password" onBlur={this.handleConfirmBlur}/>)}
-                </FormItem>
-                <FormItem {...tailFormItemLayout}>
-                    <Button type="primary" htmlType="submit">
-                        Save settings
-                    </Button>
-                </FormItem>
+                <Row style={rowStyle} gutter={0} justify="start">
+                    <Col sm={12} xs={24} style={colStyle}>
+                        <FormItem {...formItemLayout} label="connectionString" hasFeedback>
+                            {getFieldDecorator('connectionString', {
+                                initialValue : connectionString,
+                                rules: [
+                                    {
+                                        type: 'string',
+                                        message: 'The input is not valid!',
+                                    },
+                                    {
+                                        required: true,
+                                        message: 'Please input your Connection String!',
+                                    },
+                                ],
+                            })(<Input name="connectionString" id="connectionString"/>)}
+                        </FormItem>
+                    </Col>
+                    <Col sm={12} xs={24} style={colStyle}>
+                        <FormItem {...formItemLayout} label="Port" hasFeedback>
+                            {getFieldDecorator('port', {
+                                initialValue : port,
+                                rules: [
+                                    {
+                                        type: 'number',
+                                        message: 'The input is not valid!',
+                                    },
+                                    {
+                                        required: true,
+                                        message: 'Please input your Port!',
+                                    },
+                                ],
+                            })(<Input name="port" id="port"/>)}
+                        </FormItem>
+                    </Col>
+                </Row>
+                <Row style={rowStyle} gutter={0} justify="start">
+                    <Col sm={12} xs={24} style={colStyle}>
+                        <FormItem {...formItemLayout} label="Username" hasFeedback>
+                            {getFieldDecorator('username', {
+                                initialValue : username,
+                                rules: [
+                                    {
+                                        type: 'string',
+                                        message: 'The input is not valid!',
+                                    },
+                                    {
+                                        required: true,
+                                        message: 'Please input your Username!',
+                                    },
+                                ],
+                            })(<Input name="username" id="username"/>)}
+                        </FormItem>
+                    </Col>
+                    <Col sm={12} xs={24} style={colStyle}>
+                        <FormItem {...formItemLayout} label="Password" hasFeedback>
+                            {getFieldDecorator('password', {
+                                initialValue : password,
+                                rules: [
+                                    {
+                                        required: true,
+                                        message: 'Please input your password!',
+                                    },
+                                    {
+                                        validator: this.checkConfirm,
+                                    },
+                                ],
+                            })(<Input type="password" name="password" id="password"/>)}
+                        </FormItem>
+                    </Col>
+                </Row>
+                <Row style={rowStyle} gutter={0} justify="start">
+                    <Col sm={12} xs={24} style={colStyle}>
+                        <FormItem {...tailFormItemLayout}>
+                            <Button type="primary" htmlType="submit">
+                                Save settings
+                            </Button>
+                        </FormItem>
+                    </Col>
+                </Row>
             </Form>
         );
     }

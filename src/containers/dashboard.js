@@ -8,7 +8,10 @@ import {connect} from 'react-redux';
 const {
     getData,
     getDataSuccessResult,
-    getDataErrorResult
+    getDataErrorResult,
+    updateData,
+    updateDataErrorResult,
+    updateDataSuccessResult
 } = actions;
 
 class DashboardView extends Component {
@@ -25,7 +28,14 @@ const mapStateToProps = state => ({
 
 const Dashboard = connect(
     mapStateToProps,
-    {getData, getDataErrorResult, getDataSuccessResult}
+    {
+        getData,
+        getDataErrorResult,
+        getDataSuccessResult,
+        updateData,
+        updateDataErrorResult,
+        updateDataSuccessResult
+    }
 )(DashboardView);
 
 export default Dashboard;

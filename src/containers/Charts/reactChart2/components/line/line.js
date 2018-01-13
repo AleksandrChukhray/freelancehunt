@@ -5,7 +5,7 @@ import { data } from './lineConfig';
 class LineChart extends React.Component {
   render() {
     return (
-        <Line data={data} />
+        <Line data={this.props.data} />
     );
   }
 };

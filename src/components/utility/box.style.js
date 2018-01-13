@@ -3,7 +3,7 @@ import { palette } from 'styled-theme';
 
 const BoxWrapper = styled.div`
   width: 100%;
-  height: 100%;
+  height: auto;
   padding: 20px;
   background-color: #ffffff;
   border: 1px solid ${palette('border', 0)};

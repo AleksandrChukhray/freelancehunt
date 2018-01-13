@@ -1,4 +1,6 @@
-import {all, takeEvery, put, call} from 'redux-saga/effects';
+import {all, takeEvery, takeLatest, put, call} from 'redux-saga/effects';
+
+import Notification from '../../components/notification';
 import actions from './actions';
 
 const serverApi = 'http://89.223.29.186:17500/';
@@ -17,14 +19,16 @@ const param = {
 // GET http://89.223.29.186:17500/value1 – данные первого показателя
 // GET http://89.223.29.186:17500/value2 – данные второго показателя
 
-const onRequest = async (url, type) =>
-    //await fetch(`${serverApi}${url}`, Object.assign(param, { method: type }))
-    await fetch(`${fakerApi}/users`)
+const onRequest = async (url, type, params) =>
+        await fetch(`${serverApi}${url}`, Object.assign(param, {
+            method: type, body: params || null
+        }))
         .then(res => res.json())
         .catch(error => error);
 
+
 function* Request(payload) {
-    const { url, type } = payload.payload;
+    const {url, type} = payload.payload;
     try {
         const Result = yield call(onRequest, url, type);
         if (Result) {
@@ -39,8 +43,43 @@ function* Request(payload) {
     }
 }
 
+function* RequestWithNotification(payload) {
+    const {url, type, params} = payload.payload;
+
+    try {
+        const Result = yield call(onRequest, url, type, params);
+
+        if (Result) {
+            yield put(actions.updateDataSuccessResult(Result, url));
+            Notification(
+                'success',
+                'Received values of form',
+                JSON.stringify(Result)
+            )
+        } else {
+            yield put(actions.updateDataSuccessResult('', url));
+            Notification(
+                'success',
+                'Received values of form',
+                JSON.stringify(Result)
+            )
+        }
+
+    } catch (error) {
+        yield put(actions.updateDataErrorResult());
+        Notification(
+            'error',
+            'Received values of form',
+            {}
+        )
+    }
+}
+
 export default function* rootSaga() {
     yield all(
-        [takeEvery(actions.GET_DATA, Request)]
+        [
+            takeEvery(actions.GET_DATA, Request),
+            takeEvery(actions.UPDATE_DATA, RequestWithNotification)
+        ]
     );
 }

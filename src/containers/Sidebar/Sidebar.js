@@ -127,22 +127,12 @@ class Sidebar extends Component {
                             onOpenChange={this.onOpenChange}
                             className="isoDashboardMenu"
                         >
-                            <Menu.Item key="blankPage">
-                                <Link to={`${url}/blankPage`}>
-                                  <span className="isoMenuHolder" style={submenuColor}>
-                                    <i className="ion-document"/>
-                                    <span className="nav-text">
-                                      <IntlMessages id="sidebar.blankPage"/>
-                                    </span>
-                                  </span>
-                                </Link>
-                            </Menu.Item>
-                            <Menu.Item key="shuffle">
-                                <Link to={`${url}/shuffle`}>
+                            <Menu.Item key="dashboard">
+                                <Link to={`${url}`}>
                                     <span className="isoMenuHolder" style={submenuColor}>
                                       <i className="ion-grid"/>
                                       <span className="nav-text">
-                                        <IntlMessages id="sidebar.shuffle"/>
+                                        <IntlMessages id="forms.progressBar.dashboardTitle"/>
                                       </span>
                                     </span>
                                 </Link>

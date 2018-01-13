@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import clone from 'clone';
 import {Row, Col} from 'antd';
+import moment from 'moment';
 import basicStyle from '../../config/basicStyle';
 import IsoWidgetsWrapper from './widgets-wrapper';
 import IsoWidgetBox from './widget-box';
@@ -10,9 +11,12 @@ import StickerWidget from './sticker/sticker-widget';
 import {TableViews, tableinfos, dataList} from '../Tables/antTables';
 import * as rechartConfigs from '../Charts/recharts/config';
 import {GoogleChart} from '../Charts/googleChart';
+import Line from '../Charts/reactChart2/components/line/line';
 import * as googleChartConfigs from '../Charts/googleChart/config';
+import { data } from '../Charts/reactChart2/components/line/lineConfig';
 import IntlMessages from '../../components/utility/intlMessages';
-import FormValidation from '../../containers/Forms/FormsWithValidation/FormValidation';
+import FormValidation from '../Forms/FormsWithValidation/FormValidation';
+import Spin from '../Spin/spin.style';
 
 const tableDataList = clone(dataList);
 tableDataList.size = 5;
@@ -24,25 +28,9 @@ export default class IsoWidgets extends Component {
 
         this.getData = this.getData.bind(this);
     }
-    componentWillUnMount() {
-        clearInterval(this.interval);
-    }
 
     componentWillMount() {
-        // this.chart1 = this.props.Dashboard.get('chart1');
-        // this.chart2 = this.props.Dashboard.get('chart2');
-
-        this.interval = setInterval(this.getData, 15000);
-
-
-        this.chart1.title = 'First Chart';
-        this.chart2.title = 'Second Chart';
-
-        this.chart1.options.hAxis.title = 'Date';
-        this.chart1.options.vAxis.title = 'Value';
-
-        this.chart2.options.hAxis.title = 'Date';
-        this.chart2.options.vAxis.title = 'Value';
+        this.getData();
     }
 
     getData(){
@@ -53,20 +41,34 @@ export default class IsoWidgets extends Component {
         this.props.getData('settings', 'GET');
     }
 
-    chart1 = googleChartConfigs.lineChart;
-    chart2 = googleChartConfigs.lineChart;
+    prepareData = (chartValue, dataChar, options) => {
+        const chart = chartValue;
+
+        chart.datasets[0].label = options.title; //'First Chart'
+
+        if(dataChar && dataChar.length > 0){
+            chart.datasets[0].data = [];
+            chart.labels = [];
+
+            dataChar.map((value, idx) => {
+                chart.labels.push(moment(value[0]).format('HH-mm-ss'));
+                chart.datasets[0].data.push(parseFloat(value[1] || 0));
+            });
+        }
+    };
+
     interval = '';
+    chart1 = clone(data);
+    chart2 = data;
 
     render() {
-        //console.log('isoWidgets rerender');
         const {
             getData,
-            getDataErrorResult,
-            getDataSuccessResult,
             Dashboard
         } = this.props;
 
         const {rowStyle, colStyle} = basicStyle;
+
         const wisgetPageStyle = {
             display: 'flex',
             flexFlow: 'row wrap',
@@ -87,6 +89,15 @@ export default class IsoWidgets extends Component {
             ...rechartConfigs.StackedAreaChart,
             width: window.innerWidth < 450 ? 300 : 500
         };
+
+        this.prepareData(this.chart1, Dashboard.get('chart2') ? Dashboard.get('chart2').elements: [], {
+            title : 'Second Chart for Dashboard'
+        });
+
+        this.prepareData(this.chart2, Dashboard.get('chart1') ? Dashboard.get('chart1').elements : [], {
+            title : 'First Chart for Dashboard'
+        });
+
         return (
             <div style={wisgetPageStyle}>
                 {/* value */}
@@ -95,7 +106,7 @@ export default class IsoWidgets extends Component {
                         <IsoWidgetsWrapper>
                             {/* Sticker Widget */}
                             <StickerWidget
-                                number={Dashboard.get('value1') ? Dashboard.get('value1')[0].username : 0}
+                                number={Dashboard.get('value1') ? Dashboard.get('value1').value: 0}
                                 text={<IntlMessages id="widget.stickerwidget1.text"/>}
                                 icon="ion-email-unread"
                                 fontColor="#ffffff"
@@ -108,7 +119,7 @@ export default class IsoWidgets extends Component {
                         <IsoWidgetsWrapper>
                             {/* Sticker Widget */}
                             <StickerWidget
-                                number={Dashboard.get('value2') ? Dashboard.get('value2')[1].username : 0}
+                                number={Dashboard.get('value2') ? Dashboard.get('value2').value : 0}
                                 text={<IntlMessages id="widget.stickerwidget2.text"/>}
                                 icon="ion-android-camera"
                                 fontColor="#ffffff"
@@ -121,7 +132,7 @@ export default class IsoWidgets extends Component {
                         <IsoWidgetsWrapper>
                             {/* Sticker Widget */}
                             <StickerWidget
-                                number={Dashboard.get('value1') ? Dashboard.get('value1')[2].username : 0}
+                                number={Dashboard.get('value1') ? Dashboard.get('value1').value : 0}
                                 text={<IntlMessages id="widget.stickerwidget3.text"/>}
                                 icon="ion-chatbubbles"
                                 fontColor="#ffffff"
@@ -134,7 +145,7 @@ export default class IsoWidgets extends Component {
                         <IsoWidgetsWrapper>
                             {/* Sticker Widget */}
                             <StickerWidget
-                                number={Dashboard.get('value2') ? Dashboard.get('value2')[3].username : 0}
+                                number={Dashboard.get('value2') ? Dashboard.get('value2').value : 0}
                                 text={<IntlMessages id="widget.stickerwidget4.text"/>}
                                 icon="ion-android-cart"
                                 fontColor="#ffffff"
@@ -148,19 +159,16 @@ export default class IsoWidgets extends Component {
                 <Row style={rowStyle} gutter={0} justify="start">
                     <Col md={12} sm={24} xs={24} style={colStyle}>
                         <IsoWidgetsWrapper>
-                            <IsoWidgetBox height={470}>
-                                <GoogleChart
-                                    {...this.chart1}
-                                    chartEvents={chartEvents}
-                                />
+                            <IsoWidgetBox height={400}>
+                                <Line data={this.chart1}/>
                             </IsoWidgetBox>
                         </IsoWidgetsWrapper>
                     </Col>
 
                     <Col md={12} sm={24} xs={24} style={colStyle}>
                         <IsoWidgetsWrapper>
-                            <IsoWidgetBox height={470}>
-                                <GoogleChart {...this.chart2} />
+                            <IsoWidgetBox height={400}>
+                                <Line data={this.chart2}/>
                             </IsoWidgetBox>
                         </IsoWidgetsWrapper>
                     </Col>
@@ -169,10 +177,24 @@ export default class IsoWidgets extends Component {
                 {/* forms */}
                 <Row style={rowStyle} gutter={0} justify="start">
                     <Col md={24} sm={24} xs={24} style={colStyle}>
-                        <PageHeader>Settings</PageHeader>
-                        <Box>
-                            <FormValidation />
-                        </Box>
+                        <IsoWidgetsWrapper>
+                            <IsoWidgetBox height={470}>
+                                <PageHeader>Settings</PageHeader>
+                                <Box>
+                                    <Spin spinning={/*Dashboard.get('settings') ? Dashboard.get('settings').spinLoading : */false}>
+                                        <FormValidation
+                                            settings={Dashboard.get('settings') || {
+                                                port: '',
+                                                connectionString: '',
+                                                username: '',
+                                                password: ''
+                                            }}
+                                            updateData={this.props.updateData.bind(this, 'settings', 'GET')}
+                                        />
+                                    </Spin>
+                                </Box>
+                            </IsoWidgetBox>
+                        </IsoWidgetsWrapper>
                     </Col>
                 </Row>
             </div>
