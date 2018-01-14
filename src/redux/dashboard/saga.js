@@ -1,11 +1,11 @@
-import {all, takeEvery, takeLatest, put, call} from 'redux-saga/effects';
+import {all, takeEvery, put, call} from 'redux-saga/effects';
 
 import Notification from '../../components/notification';
 import actions from './actions';
 
 const serverApi = 'http://89.223.29.186:17500/';
-const fakerApi = 'https://jsonplaceholder.typicode.com';
-const githubApi = 'https://api.github.com/search/repositories?per_page=10&q=javascript&page=1';
+// const fakerApi = 'https://jsonplaceholder.typicode.com';
+// const githubApi = 'https://api.github.com/search/repositories?per_page=10&q=javascript&page=1';
 
 const param = {
     //mode: 'no-cors',

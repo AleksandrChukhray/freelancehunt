@@ -2,9 +2,9 @@ import React, {Component} from 'react';
 import {Input, Row, Col} from 'antd';
 import basicStyle from '../../../config/basicStyle';
 import Form from '../../../components/uielements/form';
-import Checkbox from '../../../components/uielements/checkbox';
+//import Checkbox from '../../../components/uielements/checkbox';
 import Button from '../../../components/uielements/button';
-import Notification from '../../../components/notification';
+//import Notification from '../../../components/notification';
 
 const FormItem = Form.Item;
 

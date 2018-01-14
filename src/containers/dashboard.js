@@ -1,6 +1,4 @@
 import React, {Component} from 'react';
-import LayoutContentWrapper from '../components/utility/layoutWrapper';
-import LayoutContent from '../components/utility/layoutContent';
 import Widget from '../containers/Widgets';
 import actions from './../redux/dashboard/actions';
 import {connect} from 'react-redux';
