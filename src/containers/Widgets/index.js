@@ -8,11 +8,8 @@ import IsoWidgetBox from './widget-box';
 import PageHeader from '../../components/utility/pageHeader';
 import Box from '../../components/utility/box';
 import StickerWidget from './sticker/sticker-widget';
-import {TableViews, tableinfos, dataList} from '../Tables/antTables';
-import * as rechartConfigs from '../Charts/recharts/config';
-import {GoogleChart} from '../Charts/googleChart';
+import { dataList} from '../Tables/antTables';
 import Line from '../Charts/reactChart2/components/line/line';
-import * as googleChartConfigs from '../Charts/googleChart/config';
 import { data } from '../Charts/reactChart2/components/line/lineConfig';
 import IntlMessages from '../../components/utility/intlMessages';
 import FormValidation from '../Forms/FormsWithValidation/FormValidation';
@@ -36,8 +33,10 @@ export default class IsoWidgets extends Component {
     getData(){
         this.props.getData('value1', 'GET');
         this.props.getData('value2', 'GET');
-        this.props.getData('chart1', 'GET');
-        this.props.getData('chart2', 'GET');
+
+        this.props.chartData('chart1', 'GET');
+        this.props.chartData('chart2', 'GET');
+
         this.props.getData('settings', 'GET');
     }
 
@@ -50,9 +49,9 @@ export default class IsoWidgets extends Component {
             chart.datasets[0].data = [];
             chart.labels = [];
 
-            dataChar.map((value, idx) => {
+            dataChar.map((value, idx) => { //eslint-disable-line
                 chart.labels.push(moment(value[0]).format('HH-mm-ss'));
-                chart.datasets[0].data.push(parseFloat(value[1] || 0));
+                chart.datasets[0].data.push(parseFloat(value[1]));
             });
         }
     };
@@ -63,7 +62,6 @@ export default class IsoWidgets extends Component {
 
     render() {
         const {
-            getData,
             Dashboard
         } = this.props;
 
@@ -75,19 +73,6 @@ export default class IsoWidgets extends Component {
             alignItems: 'flex-start',
             padding: '15px',
             overflow: 'hidden'
-        };
-
-        const chartEvents = [
-            {
-                eventName: 'select',
-                callback(Chart) {
-                }
-            }
-        ];
-
-        const stackConfig = {
-            ...rechartConfigs.StackedAreaChart,
-            width: window.innerWidth < 450 ? 300 : 500
         };
 
         this.prepareData(this.chart1, Dashboard.get('chart2') ? Dashboard.get('chart2').elements: [], {
@@ -160,7 +145,7 @@ export default class IsoWidgets extends Component {
                     <Col md={12} sm={24} xs={24} style={colStyle}>
                         <IsoWidgetsWrapper>
                             <IsoWidgetBox height={400}>
-                                <Line data={this.chart1}/>
+                                <Line data={this.chart2}/>
                             </IsoWidgetBox>
                         </IsoWidgetsWrapper>
                     </Col>
@@ -168,7 +153,7 @@ export default class IsoWidgets extends Component {
                     <Col md={12} sm={24} xs={24} style={colStyle}>
                         <IsoWidgetsWrapper>
                             <IsoWidgetBox height={400}>
-                                <Line data={this.chart2}/>
+                                <Line data={this.chart1}/>
                             </IsoWidgetBox>
                         </IsoWidgetsWrapper>
                     </Col>
@@ -181,7 +166,7 @@ export default class IsoWidgets extends Component {
                             <IsoWidgetBox height={470}>
                                 <PageHeader>Settings</PageHeader>
                                 <Box>
-                                    <Spin spinning={/*Dashboard.get('settings') ? Dashboard.get('settings').spinLoading : */false}>
+                                    <Spin spinning={Dashboard.get('spinLoading')}>
                                         <FormValidation
                                             settings={Dashboard.get('settings') || {
                                                 port: '',
@@ -189,7 +174,7 @@ export default class IsoWidgets extends Component {
                                                 username: '',
                                                 password: ''
                                             }}
-                                            updateData={this.props.updateData.bind(this, 'settings', 'GET')}
+                                            updateData={this.props.updateData.bind(this, 'settings', 'PUT')}
                                         />
                                     </Spin>
                                 </Box>

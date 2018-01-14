@@ -1,15 +1,15 @@
-import {all, takeEvery, takeLatest, put, call} from 'redux-saga/effects';
+import {all, takeEvery, put, call} from 'redux-saga/effects';
 
 import Notification from '../../components/notification';
 import actions from './actions';
 
-const serverApi = 'http://89.223.29.186:17500/';
-const fakerApi = 'https://jsonplaceholder.typicode.com';
-const githubApi = 'https://api.github.com/search/repositories?per_page=10&q=javascript&page=1';
+const serverApi = 'http://localhost:17500/'; /*'http://89.223.29.186:17500/';*/
+
 
 const param = {
     //mode: 'no-cors',
     method: 'POST',
+    //credentials: 'same-origin'
 };
 
 // GET http://89.223.29.186:17500/settings – получить настройки
@@ -19,12 +19,17 @@ const param = {
 // GET http://89.223.29.186:17500/value1 – данные первого показателя
 // GET http://89.223.29.186:17500/value2 – данные второго показателя
 
-const onRequest = async (url, type, params) =>
-        await fetch(`${serverApi}${url}`, Object.assign(param, {
-            method: type, body: params || null
-        }))
+const onRequest = async (url, type, params) =>{
+    const prms = Object.assign(param, {
+        method: type, body: params || null
+    });
+
+    debugger
+    return await fetch(`${serverApi}${url}`, prms)
         .then(res => res.json())
         .catch(error => error);
+}
+
 
 
 function* Request(payload) {
@@ -37,6 +42,22 @@ function* Request(payload) {
             );
         } else {
             yield put(actions.getDataSuccessResult('', url));
+        }
+    } catch (error) {
+        yield put(actions.getDataErrorResult());
+    }
+}
+
+function* RequestChart(payload) {
+    const {url, type} = payload.payload;
+    try {
+        const Result = yield call(onRequest, url, type);
+        if (Result) {
+            yield put(
+                actions.chartDataSuccessResult(Result, url)
+            );
+        } else {
+            yield put(actions.chartDataSuccessResult('', url));
         }
     } catch (error) {
         yield put(actions.getDataErrorResult());
@@ -79,6 +100,7 @@ export default function* rootSaga() {
     yield all(
         [
             takeEvery(actions.GET_DATA, Request),
+            takeEvery(actions.CHART_DATA, RequestChart),
             takeEvery(actions.UPDATE_DATA, RequestWithNotification)
         ]
     );

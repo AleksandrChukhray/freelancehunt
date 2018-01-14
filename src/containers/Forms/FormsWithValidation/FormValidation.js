@@ -2,48 +2,63 @@ import React, {Component} from 'react';
 import {Input, Row, Col} from 'antd';
 import basicStyle from '../../../config/basicStyle';
 import Form from '../../../components/uielements/form';
-import Checkbox from '../../../components/uielements/checkbox';
+import _ from 'lodash';
+//import Checkbox from '../../../components/uielements/checkbox';
 import Button from '../../../components/uielements/button';
-import Notification from '../../../components/notification';
+//import Notification from '../../../components/notification';
 
 const FormItem = Form.Item;
 
 class FormWIthSubmissionButton extends Component {
-    state = {
-        confirmDirty: false,
-    };
+
     handleSubmit = e => {
         e.preventDefault();
         const updateData = this.props.updateData;
 
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
+                //this.onClickHandler();
                 updateData(values);
             }
         });
     };
 
-    handleConfirmBlur = e => {
-        const value = e.target.value;
-        this.setState({confirmDirty: this.state.confirmDirty || !!value});
-    };
+    onClickHandler = () => {
+        this.props.form.setFieldsValue({
+            port: '11111',
+            connectionString: 'dddddd',
+            username: 'ssssss',
+            password: 'aaaaaaa'
+        })
+    }
 
-    checkPassword = (rule, value, callback) => {
-        const form = this.props.form;
-        if (value && value !== form.getFieldValue('password')) {
-            callback('Two passwords that you enter is inconsistent!');
-        } else {
-            callback();
-        }
-    };
+    componentDidMount(){
+        this.props.form.resetFields();
+    }
 
-    checkConfirm = (rule, value, callback) => {
-        const form = this.props.form;
-        if (value && this.state.confirmDirty) {
-            form.validateFields(['confirm'], {force: true});
+    shouldComponentUpdate(nextProps, nextState){
+        const {
+            port,
+            connectionString,
+            username,
+            password
+        } = nextProps.settings;
+
+        const flag = _.isEqual(this.props.settings, nextProps.settings);
+
+        if(port && !flag){
+
+            this.props.form.setFieldsValue({
+                port: port.toString(),
+                connectionString,
+                username,
+                password
+            })
         }
-        callback();
-    };
+
+        return !flag
+    }
+
 
     render() {
         const {getFieldDecorator} = this.props.form;
@@ -79,6 +94,7 @@ class FormWIthSubmissionButton extends Component {
                 },
             },
         };
+
         return (
             <Form onSubmit={this.handleSubmit}>
                 <Row style={rowStyle} gutter={0} justify="start">
@@ -102,10 +118,10 @@ class FormWIthSubmissionButton extends Component {
                     <Col sm={12} xs={24} style={colStyle}>
                         <FormItem {...formItemLayout} label="Port" hasFeedback>
                             {getFieldDecorator('port', {
-                                initialValue : port,
+                                initialValue : port.toString(),
                                 rules: [
                                     {
-                                        type: 'number',
+                                        type: 'string',
                                         message: 'The input is not valid!',
                                     },
                                     {

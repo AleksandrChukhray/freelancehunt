@@ -7,6 +7,10 @@ const dashboardActons = {
     UPDATE_SUCCESS_RESULT: 'UPDATE_SUCCESS_RESULT',
     UPDATE_ERROR_RESULT: 'UPDATE_ERROR_RESULT',
 
+    CHART_DATA: 'CHART_DATA',
+    CHART_SUCCESS_RESULT: 'CHART_SUCCESS_RESULT',
+    CHART_ERROR_RESULT: 'CHART_ERROR_RESULT',
+
     getData: (url, type) => ({
         type: dashboardActons.GET_DATA,
         payload: {url, type}
@@ -18,6 +22,18 @@ const dashboardActons = {
     }),
     getDataErrorResult: () => ({
         type: dashboardActons.DATA_ERROR_RESULT
+    }),
+    chartDataSuccessResult: (result, url) => ({
+        type: dashboardActons.CHART_SUCCESS_RESULT,
+        payload: result,
+        url
+    }),
+    chartDataErrorResult: () => ({
+        type: dashboardActons.CHART_ERROR_RESULT
+    }),
+    chartData: (url, type) => ({
+        type: dashboardActons.CHART_DATA,
+        payload: {url, type}
     }),
     updateDataSuccessResult: (result, url) => ({
         type: dashboardActons.UPDATE_SUCCESS_RESULT,

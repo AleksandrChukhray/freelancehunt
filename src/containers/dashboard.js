@@ -1,6 +1,4 @@
 import React, {Component} from 'react';
-import LayoutContentWrapper from '../components/utility/layoutWrapper';
-import LayoutContent from '../components/utility/layoutContent';
 import Widget from '../containers/Widgets';
 import actions from './../redux/dashboard/actions';
 import {connect} from 'react-redux';
@@ -11,7 +9,10 @@ const {
     getDataErrorResult,
     updateData,
     updateDataErrorResult,
-    updateDataSuccessResult
+    updateDataSuccessResult,
+    chartData,
+    chartDataErrorResult,
+    chartDataSuccessResult
 } = actions;
 
 class DashboardView extends Component {
@@ -34,7 +35,10 @@ const Dashboard = connect(
         getDataSuccessResult,
         updateData,
         updateDataErrorResult,
-        updateDataSuccessResult
+        updateDataSuccessResult,
+        chartData,
+        chartDataErrorResult,
+        chartDataSuccessResult
     }
 )(DashboardView);
 
