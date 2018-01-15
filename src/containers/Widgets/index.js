@@ -23,12 +23,17 @@ tableDataList.size = 5;
 export default class IsoWidgets extends Component {
     constructor(props){
         super(props);
-
         this.getData = this.getData.bind(this);
+        this.getIntervalData = this.getIntervalData.bind(this);
     }
 
-    componentWillMount() {
+    componentWillUnmount(){
+        clearInterval(this.interval);
+    }
+
+    componentDidMount() {
         this.getData();
+        this.interval = setInterval(this.getIntervalData, 10000)
     }
 
     getData(){
@@ -39,6 +44,14 @@ export default class IsoWidgets extends Component {
         this.props.chartData('chart2', 'GET');
 
         this.props.getData('settings', 'GET');
+    }
+
+    getIntervalData(){
+        this.props.getData('value1', 'GET');
+        this.props.getData('value2', 'GET');
+
+        this.props.chartData('chart1', 'GET');
+        this.props.chartData('chart2', 'GET');
     }
 
     prepareData = (chartValue, dataChar, options) => {
