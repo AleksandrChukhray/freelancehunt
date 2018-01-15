@@ -9,7 +9,9 @@ const serverApi = 'http://localhost:17500/'; /*'http://89.223.29.186:17500/';*/
 const param = {
     //mode: 'no-cors',
     method: 'POST',
-    //credentials: 'same-origin'
+    headers: {
+        'Content-Type': 'application/json'
+    }
 };
 
 // GET http://89.223.29.186:17500/settings – получить настройки
@@ -21,8 +23,10 @@ const param = {
 
 const onRequest = async (url, type, params) =>{
     const prms = Object.assign(param, {
-        method: type, body: params || null
+        method: type, body: JSON.stringify(params)
     });
+
+    debugger;
 
     return await fetch(`${serverApi}${url}`, prms)
         .then(res => res.json())

@@ -24,7 +24,8 @@ class DashboardView extends Component {
 }
 
 const mapStateToProps = state => ({
-    Dashboard: state.Dashboard
+    Dashboard: state.Dashboard,
+    App: state.App
 });
 
 const Dashboard = connect(

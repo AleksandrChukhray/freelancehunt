@@ -14,6 +14,7 @@ import { data } from '../Charts/reactChart2/components/line/lineConfig';
 import IntlMessages from '../../components/utility/intlMessages';
 import FormValidation from '../Forms/FormsWithValidation/FormValidation';
 import Spin from '../Spin/spin.style';
+import * as rechartConfigs from '../Charts/recharts/config';
 
 const tableDataList = clone(dataList);
 tableDataList.size = 5;
@@ -62,7 +63,8 @@ export default class IsoWidgets extends Component {
 
     render() {
         const {
-            Dashboard
+            Dashboard,
+            App
         } = this.props;
 
         const {rowStyle, colStyle} = basicStyle;
@@ -73,6 +75,11 @@ export default class IsoWidgets extends Component {
             alignItems: 'flex-start',
             padding: '15px',
             overflow: 'hidden'
+        };
+
+        const stackConfig = {
+            ...rechartConfigs.StackedAreaChart,
+            width: App.get('view') === 'MobileView' ? 680 : 400
         };
 
         this.prepareData(this.chart1, Dashboard.get('chart2') ? Dashboard.get('chart2').elements: [], {
@@ -163,7 +170,7 @@ export default class IsoWidgets extends Component {
                 <Row style={rowStyle} gutter={0} justify="start">
                     <Col md={24} sm={24} xs={24} style={colStyle}>
                         <IsoWidgetsWrapper>
-                            <IsoWidgetBox height={470}>
+                            <IsoWidgetBox height={stackConfig.width}>
                                 <PageHeader>Settings</PageHeader>
                                 <Box>
                                     <Spin spinning={Dashboard.get('spinLoading')}>

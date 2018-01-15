@@ -17,20 +17,10 @@ class FormWIthSubmissionButton extends Component {
 
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
-                //this.onClickHandler();
                 updateData(values);
             }
         });
     };
-
-    onClickHandler = () => {
-        this.props.form.setFieldsValue({
-            port: '11111',
-            connectionString: 'dddddd',
-            username: 'ssssss',
-            password: 'aaaaaaa'
-        })
-    }
 
     componentDidMount(){
         this.props.form.resetFields();
@@ -46,8 +36,6 @@ class FormWIthSubmissionButton extends Component {
 
         const flag = _.isEqual(this.props.settings, nextProps.settings);
 
-
-        debugger;
 
         if(port && !flag){
 
