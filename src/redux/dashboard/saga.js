@@ -24,7 +24,6 @@ const onRequest = async (url, type, params) =>{
         method: type, body: params || null
     });
 
-    debugger
     return await fetch(`${serverApi}${url}`, prms)
         .then(res => res.json())
         .catch(error => error);

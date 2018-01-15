@@ -36,7 +36,7 @@ class FormWIthSubmissionButton extends Component {
         this.props.form.resetFields();
     }
 
-    shouldComponentUpdate(nextProps, nextState){
+    componentWillReceiveProps(nextProps){
         const {
             port,
             connectionString,
@@ -45,6 +45,9 @@ class FormWIthSubmissionButton extends Component {
         } = nextProps.settings;
 
         const flag = _.isEqual(this.props.settings, nextProps.settings);
+
+
+        debugger;
 
         if(port && !flag){
 
