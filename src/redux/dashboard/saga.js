@@ -74,15 +74,15 @@ function* RequestWithNotification(payload) {
                 yield put(actions.updateDataErrorResult(Result, url));
                     Notification(
                         'error',
-                        'Received values of form',
+                        'Error',
                         JSON.stringify(Result.error)
                     )
             }else{
                 yield put(actions.updateDataSuccessResult(Result, url));
                 Notification(
                     'success',
-                    'Received values of form',
-                    JSON.stringify(Result)
+                    'Saved',
+                    ''
                 )
             }
         }
@@ -91,8 +91,8 @@ function* RequestWithNotification(payload) {
         yield put(actions.updateDataErrorResult());
         Notification(
             'error',
-            'Received values of form',
-            {}
+            'Error',
+            'Something went wrong !'
         )
     }
 }

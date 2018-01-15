@@ -80,7 +80,7 @@ export default class IsoWidgets extends Component {
         const stackConfig = {
             ...rechartConfigs.StackedAreaChart,
             width: App.get('view') === 'MobileView' ? 680 : 400,
-            chartWidth: App.get('view') === 'MobileView' ? 200 : 400
+            chartWidth: App.get('view') === 'MobileView' ? 'auto' : 'auto'
         };
 
         this.prepareData(this.chart1, Dashboard.get('chart2') ? Dashboard.get('chart2').elements: [], {

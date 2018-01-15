@@ -38,15 +38,6 @@ class Topbar extends Component {
               onClick={toggleCollapsed}
             />
           </div>
-
-          <ul className="isoRight">
-            <li
-              onClick={() => this.setState({ selectedItem: 'user' })}
-              className="isoUser"
-            >
-              <TopbarUser />
-            </li>
-          </ul>
         </Header>
       </TopbarWrapper>
     );
