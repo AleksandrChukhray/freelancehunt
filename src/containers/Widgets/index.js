@@ -79,7 +79,8 @@ export default class IsoWidgets extends Component {
 
         const stackConfig = {
             ...rechartConfigs.StackedAreaChart,
-            width: App.get('view') === 'MobileView' ? 680 : 400
+            width: App.get('view') === 'MobileView' ? 680 : 400,
+            chartWidth: App.get('view') === 'MobileView' ? 200 : 400
         };
 
         this.prepareData(this.chart1, Dashboard.get('chart2') ? Dashboard.get('chart2').elements: [], {
@@ -151,7 +152,7 @@ export default class IsoWidgets extends Component {
                 <Row style={rowStyle} gutter={0} justify="start">
                     <Col md={12} sm={24} xs={24} style={colStyle}>
                         <IsoWidgetsWrapper>
-                            <IsoWidgetBox height={400}>
+                            <IsoWidgetBox height={stackConfig.chartWidth}>
                                 <Line data={this.chart2}/>
                             </IsoWidgetBox>
                         </IsoWidgetsWrapper>
@@ -159,7 +160,7 @@ export default class IsoWidgets extends Component {
 
                     <Col md={12} sm={24} xs={24} style={colStyle}>
                         <IsoWidgetsWrapper>
-                            <IsoWidgetBox height={400}>
+                            <IsoWidgetBox height={stackConfig.chartWidth}>
                                 <Line data={this.chart1}/>
                             </IsoWidgetBox>
                         </IsoWidgetsWrapper>

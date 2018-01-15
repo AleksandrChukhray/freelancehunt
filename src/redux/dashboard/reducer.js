@@ -56,7 +56,7 @@ const dashboardReducer= (state = initState, action) => {
                 .set('spinLoading', true);
         case actions.UPDATE_SUCCESS_RESULT:
             return state
-                .set(action.url, action.payload)
+                .set(action.url, action.payload.pool)
                 .set('loading', false)
                 .set('error', false)
                 .set('spinLoading', false);
