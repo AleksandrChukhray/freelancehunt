@@ -40,8 +40,10 @@ const dashboardActons = {
         payload: result,
         url
     }),
-    updateDataErrorResult: () => ({
-        type: dashboardActons.UPDATE_ERROR_RESULT
+    updateDataErrorResult: (result, url) => ({
+        type: dashboardActons.UPDATE_ERROR_RESULT,
+        payload: result,
+        url
     }),
     updateData: (url, type, params) => ({
         type: dashboardActons.UPDATE_DATA,

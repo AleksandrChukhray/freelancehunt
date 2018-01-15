@@ -26,14 +26,10 @@ const onRequest = async (url, type, params) =>{
         method: type, body: JSON.stringify(params)
     });
 
-    debugger;
-
     return await fetch(`${serverApi}${url}`, prms)
         .then(res => res.json())
         .catch(error => error);
 }
-
-
 
 function* Request(payload) {
     const {url, type} = payload.payload;
@@ -74,19 +70,21 @@ function* RequestWithNotification(payload) {
         const Result = yield call(onRequest, url, type, params);
 
         if (Result) {
-            yield put(actions.updateDataSuccessResult(Result, url));
-            Notification(
-                'success',
-                'Received values of form',
-                JSON.stringify(Result)
-            )
-        } else {
-            yield put(actions.updateDataSuccessResult('', url));
-            Notification(
-                'success',
-                'Received values of form',
-                JSON.stringify(Result)
-            )
+            if (Result.error){
+                yield put(actions.updateDataErrorResult(Result, url));
+                    Notification(
+                        'error',
+                        'Received values of form',
+                        JSON.stringify(Result.error)
+                    )
+            }else{
+                yield put(actions.updateDataSuccessResult(Result, url));
+                Notification(
+                    'success',
+                    'Received values of form',
+                    JSON.stringify(Result)
+                )
+            }
         }
 
     } catch (error) {
